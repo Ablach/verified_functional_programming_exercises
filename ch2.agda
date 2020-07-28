@@ -4,6 +4,8 @@ data _≡_ {A : Set} (x : A) : A → Set where
   refl : x ≡ x
 infix 4 _≡_
 
+{-# BUILTIN EQUALITY _≡_ #-}
+
 data 𝔹 : Set where
      t : 𝔹
      f : 𝔹 
