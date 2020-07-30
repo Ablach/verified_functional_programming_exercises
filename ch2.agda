@@ -1,6 +1,6 @@
 module ch2 where
 
-data _≡_ {A : Set} (x : A) : A → Set where
+data _≡_ {ℓ} {A : Set ℓ} (x : A) : A → Set where
   refl : x ≡ x
 infix 4 _≡_
 
