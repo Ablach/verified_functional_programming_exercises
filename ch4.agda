@@ -14,6 +14,10 @@ _++_ : ∀ {ℓ} {α : Set ℓ} → 𝕃 α → 𝕃 α → 𝕃 α
 [] ++ ys = ys
 (x ∷ xs) ++ ys = x ∷ (xs ++ ys)
 
+length : ∀ {ℓ} {α : Set ℓ} → 𝕃 α → ℕ
+length [] = Z
+length (x ∷ xs ) = S (length xs)
+
 takeWhile : ∀ {ℓ} {α : Set ℓ} → (α → 𝔹) → 𝕃 α → 𝕃 α
 takeWhile p [] = []
 takeWhile p (x ∷ xs) with p x
