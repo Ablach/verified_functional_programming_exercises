@@ -72,4 +72,5 @@ samp-t = {A B : Set} {l1 l2 l3 : 𝕃 A} → {f : A → B} →
   𝕃⟦((((l1 ʳ) ++ʳ (l2 ʳ)) ++ʳ ([]ʳ)))⟧ ≡ 𝕃⟦(l1 ʳ) ++ʳ (l2 ʳ)⟧
 
 test : samp-t
-test {A} {B} {l1} {l2} rewrite (++[] (l1 ++ l2)) = refl
+-- test {A} {B} {l1} {l2} rewrite (++[] (l1 ++ l2)) = refl
+test {A} {B} {l1} {l2} rewrite (𝕃ʳ-simp-sound ((((l1 ʳ) ++ʳ (l2 ʳ)) ++ʳ ([]ʳ))) 2) = refl
