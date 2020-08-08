@@ -1,3 +1,5 @@
+module ch5 where
+
 open import ch2
 open import ch3
 open import ch4
@@ -105,12 +107,54 @@ infix 7 _∙𝕍_
 𝕍-to-𝕃-and-back (x ∷ v) with (𝕍-to-𝕃-and-back v)
 ...                                                       | l rewrite l = refl
 
-𝕍-unzip : ∀ {ℓ} {α β : Set ℓ} {n : ℕ} → (𝕍 (α , β) n) →  (𝕍 α n) , (𝕍 β n)
-𝕍-unzip [] = {!!}
-𝕍-unzip ((a ** b) ∷ v) = {!!}
 
-{-
-/home/scott/Agda/verified_functional_programming_exercises/ch5.agda:109,16-18
-The constructor [] does not construct an element of Set _ℓ_192
-when checking that the expression [] has type Set _ℓ_192
+{- 
+
+completed in lib files
+
+𝕍-unzip : ∀ {ℓ} {α β : Set ℓ} {n : ℕ} → (𝕍 (α × β) n) →  (𝕍 α n) × (𝕍 β n)
+𝕍-unzip [] = [] , []
+𝕍-unzip ((a , b) :: z) = a :: fst (𝕍-unzip z) , b :: snd (𝕍-unzip z)
+
+data either (A : Set) (B : Set)  : Set where
+  left : A → either A B
+  right : B → either A B
+
+_not-empty : ∀ {l u : A} → bst l u → 𝔹
+bst-leaf x not-empty = ff
+bst-node d t t₁ x x₁ not-empty = tt
+
+remove-min : ∀ {l u : A} → (t : bst l u) → (t not-empty ≡ tt)→  Σ A (λ b → bst l u)
+remove-min (bst-node d (bst-leaf x) (bst-leaf x₁) pl pr) prf
+           = (d , bst-leaf (≤A-trans pl (≤A-trans x (≤A-trans x₁ pr))) )
+remove-min (bst-node d (bst-leaf x) (bst-node d₁ r r₁ x₁ x₂) pl pr) prf
+  = (d , (bst-node d₁ r r₁ (≤A-trans pl (≤A-trans x x₁)) (≤A-trans x₂ pr)))
+remove-min (bst-node d (bst-node d₁ l₁ r₁ x₁ x₂) r pl pr) prf with (remove-min (bst-node d₁ l₁ r₁ x₁ x₂) refl)
+... | min , tree = min , bst-node d tree r pl pr
+
+remove : ∀ {l u : A} → A → (t : bst l u) → either (bst l u) (Σ A (λ b → bst l u))
+remove e (bst-leaf x) = left (bst-leaf x)
+remove e (bst-node d t t₁ x x₁) with (e ≤A d)
+remove e (bst-node d t t₁ x x₁) | tt with (d ≤A e)
+remove e (bst-node d (bst-leaf x₃) (bst-leaf x₂) x x₁)  | tt | tt
+  = right (d , bst-leaf (≤A-trans x (≤A-trans x₃ (≤A-trans x₂ x₁))))
+remove e (bst-node d (bst-node d₁ t t₁ x₃ x₄) (bst-leaf x₂) x x₁)  | tt | tt
+  = right (d , bst-node d₁ t t₁ (≤A-trans x x₃) (≤A-trans x₄ (≤A-trans x₂ x₁)))
+remove e (bst-node d t (bst-node d₁ t₁ t₂ x₂ x₃) x x₁)  | tt | tt with (remove-min (bst-node d₁ t₁ t₂ x₂ x₃) refl)
+... | min , tree = {!!}
+remove e (bst-node d t t₁ x x₁)  | tt | ff with (remove e t)
+... | left res = left (bst-node d t t₁ x x₁)
+... | right (e' , t') = right (e' , (bst-node d t' t₁ x x₁))
+remove e (bst-node d t t₁ x x₁)  | ff with (remove e t₁)
+... | left res = left (bst-node d t t₁ x x₁)
+... | right (e' , t₁') = right (e' , (bst-node d t t₁' x x₁))
+
+remove-max : ∀ {l u : A} → (t : bst l u) → (t not-empty ≡ tt) →  Σ A (λ b → bst l u)
+remove-max (bst-node d (bst-leaf x₃) (bst-leaf x₂) x x₁) prf
+  = d , (bst-leaf (≤A-trans x (≤A-trans x₃ (≤A-trans x₂ x₁))))
+remove-max (bst-node d (bst-node d₁ l l₁ x₃ x₄) (bst-leaf x₂) x x₁) prf
+  = d , (bst-node d₁ l l₁ (≤A-trans x x₃) (≤A-trans x₄ (≤A-trans x₂ x₁)))
+remove-max (bst-node d l (bst-node d₁ r r₁ x₂ x₃) x x₁) prf with (remove-max (bst-node d₁ r r₁ x₂ x₃) refl)
+... | max , tree = max , bst-node d l tree x x₁
+
 -}
